@@ -14,17 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRoastCount = getRoastCount;
 const db_1 = __importDefault(require("../db/db"));
+const network_response_model_1 = require("../models/network_response_model");
 function getRoastCount(request, res) {
     return __awaiter(this, void 0, void 0, function* () {
         //count the number of documents in the collection
         //check if development or production
         if (process.env.NODE_ENV === 'development') {
             console.log("Development mode");
-            return res.status(200).send("Roast count is 0");
+            return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, '0'));
         }
         const snapshot = yield db_1.default.resumeRoastCollection.get();
         const roastCount = snapshot.size + 800; //initial count of 500 roast,you can change it to 0 if you want to start from 0;
-        return res.status(200).send(`Roast count is ${roastCount}`);
+        return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, roastCount.toString()));
     });
 }
 //# sourceMappingURL=roastCount.js.map
