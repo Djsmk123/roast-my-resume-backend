@@ -5,13 +5,23 @@ import { getRoastCount } from './services/roastCount';
 import dotenv from 'dotenv';
 import generateRoast from './services/roastService';
 import multer from 'multer';
+import cors from 'cors';
 const upload = multer();
 dotenv.config();
+
 
 const app = express()
 const port = process.env.PORT || 8080
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors(
+    {
+        origin: '*',
+        methods: ['GET', 'POST'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+
+    }
+));
 
 app.get('/', (_req: Request, res: Response) => {
     //health check
