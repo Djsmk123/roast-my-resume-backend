@@ -70,13 +70,19 @@ function generateRoast(request, res) {
             const env = process.env.NODE_ENV;
             console.log(env);
             if (env !== "development") {
-                yield db_1.default.resumeRoastCollection.add({
-                    roastText: result.response.text(),
-                    roastLevel: roastTone,
-                    createdAt: new Date(),
-                    role: roleType,
-                    language: languageType,
-                });
+                try {
+                    yield db_1.default.resumeRoastCollection.add({
+                        roastText: result.response.text(),
+                        roastLevel: roastTone,
+                        createdAt: new Date(),
+                        role: roleType,
+                        language: languageType,
+                    });
+                }
+                catch (e) {
+                    //ignore
+                    console.log(e);
+                }
             }
             return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, result.response.text()));
         }

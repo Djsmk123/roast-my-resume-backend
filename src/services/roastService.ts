@@ -72,14 +72,20 @@ export default async function generateRoast(request: Request, res: Response) {
         console.log(env);
 
         if (env !== "development") {
-            await firebase.resumeRoastCollection.add({
-                roastText: result.response.text(),
-                roastLevel: roastTone,
-                createdAt: new Date(),
-                role: roleType,
-                language: languageType,
+            try {
+                await firebase.resumeRoastCollection.add({
+                    roastText: result.response.text(),
+                    roastLevel: roastTone,
+                    createdAt: new Date(),
+                    role: roleType,
+                    language: languageType,
 
-            });
+                });
+            } catch (e) {
+                //ignore
+                console.log(e);
+
+            }
         }
 
         return sendAPIResponse(res, createAPIResponse(200, result.response.text()));
