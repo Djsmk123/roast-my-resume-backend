@@ -1,5 +1,4 @@
 "use strict";
-// import PDFParser from 'pdf2json';
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,16 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-// const pdfParser = new PDFParser(this, true);
+const pdf2json_1 = __importDefault(require("pdf2json"));
+const pdfParser = new pdf2json_1.default(this, 1);
 function parsePDF(buffer) {
     return __awaiter(this, void 0, void 0, function* () {
-        return "Hello World!";
-        // return new Promise((resolve, reject) => {
-        //     pdfParser.on("pdfParser_dataError", errData => reject(errData.parserError));
-        //     pdfParser.on("pdfParser_dataReady", pdfData => resolve(pdfParser.getRawTextContent()));
-        //     pdfParser.parseBuffer(buffer);
-        // });
+        return new Promise((resolve, reject) => {
+            pdfParser.on("pdfParser_dataError", errData => reject(errData.parserError));
+            pdfParser.on("pdfParser_dataReady", pdfData => resolve(pdfParser.getRawTextContent()));
+            pdfParser.parseBuffer(buffer);
+        });
     });
 }
 exports.default = parsePDF;

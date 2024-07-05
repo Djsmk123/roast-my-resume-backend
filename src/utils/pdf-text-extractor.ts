@@ -1,13 +1,13 @@
-// import PDFParser from 'pdf2json';
+import PDFParser from 'pdf2json';
 
-// const pdfParser = new PDFParser(this, true);
+
+const pdfParser = new PDFParser(this, 1);
 
 async function parsePDF(buffer: Buffer): Promise<string> {
-    return "Hello World!";
-    // return new Promise((resolve, reject) => {
-    //     pdfParser.on("pdfParser_dataError", errData => reject(errData.parserError));
-    //     pdfParser.on("pdfParser_dataReady", pdfData => resolve(pdfParser.getRawTextContent()));
-    //     pdfParser.parseBuffer(buffer);
-    // });
+    return new Promise((resolve, reject) => {
+        pdfParser.on("pdfParser_dataError", errData => reject(errData.parserError));
+        pdfParser.on("pdfParser_dataReady", pdfData => resolve(pdfParser.getRawTextContent()));
+        pdfParser.parseBuffer(buffer);
+    });
 }
 export default parsePDF;
