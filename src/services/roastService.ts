@@ -81,6 +81,14 @@ export default async function generateRoast(request: Request, res: Response) {
                     language: languageType,
 
                 });
+
+                const snapshot = (await firebase.resumeRoastCountCollection.get()).docs[0];
+                const roastCount = snapshot.data()['count'] + 1;
+                //update document
+                await firebase.resumeRoastCountCollection.doc(snapshot.id).update({
+                    'count': roastCount
+                });
+
             } catch (e) {
                 //ignore
                 console.log(e);

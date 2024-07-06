@@ -14,10 +14,12 @@ const firebaseAdminConfig = {
 const app = (0, app_1.getApps)().length > 0 ? (0, app_1.getApp)() : (0, app_1.initializeApp)(firebaseAdminConfig);
 const firestoreInstance = (0, firestore_1.getFirestore)(app);
 const resumeRoastCollection = firestoreInstance.collection("resumeRoast");
+const resumeRoastCountCollection = firestoreInstance.collection("resumeRoastCount");
 //remote config
 const remoteConfig = (0, remote_config_1.getRemoteConfig)(app);
 exports.default = {
     resumeRoastCollection,
-    remoteConfig
+    remoteConfig,
+    resumeRoastCountCollection,
 };
 //# sourceMappingURL=db.js.map

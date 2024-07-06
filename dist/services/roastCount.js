@@ -23,8 +23,8 @@ function getRoastCount(request, res) {
             console.log("Development mode");
             return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, '0'));
         }
-        const snapshot = yield db_1.default.resumeRoastCollection.get();
-        const roastCount = snapshot.size + 800; //initial count of 500 roast,you can change it to 0 if you want to start from 0;
+        const snapshot = (yield db_1.default.resumeRoastCountCollection.get()).docs[0];
+        const roastCount = snapshot.data()['count'];
         return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, roastCount.toString()));
     });
 }

@@ -78,6 +78,12 @@ function generateRoast(request, res) {
                         role: roleType,
                         language: languageType,
                     });
+                    const snapshot = (yield db_1.default.resumeRoastCountCollection.get()).docs[0];
+                    const roastCount = snapshot.data()['count'] + 1;
+                    //update document
+                    yield db_1.default.resumeRoastCountCollection.doc(snapshot.id).update({
+                        'count': roastCount
+                    });
                 }
                 catch (e) {
                     //ignore

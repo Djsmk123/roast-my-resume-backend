@@ -9,7 +9,7 @@ export async function getRoastCount(request: Request, res: Response) {
         console.log("Development mode")
         return sendAPIResponse(res, createAPIResponse(200, '0'))
     }
-    const snapshot = await firebase.resumeRoastCollection.get();
-    const roastCount = snapshot.size + 800//initial count of 500 roast,you can change it to 0 if you want to start from 0;
+    const snapshot = (await firebase.resumeRoastCountCollection.get()).docs[0];
+    const roastCount = snapshot.data()['count'];
     return sendAPIResponse(res, createAPIResponse(200, roastCount.toString()));
 }
