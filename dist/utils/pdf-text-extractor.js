@@ -14,11 +14,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const pdf2json_1 = __importDefault(require("pdf2json"));
 const pdfParser = new pdf2json_1.default(this, 1);
+pdfParser.setMaxListeners(20); // Increase the limit to 20 listeners
 function parsePDF(buffer) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
-            pdfParser.on("pdfParser_dataError", errData => reject(errData.parserError));
-            pdfParser.on("pdfParser_dataReady", pdfData => resolve(pdfParser.getRawTextContent()));
+            const onDataError = (errData) => {
+                pdfParser.removeAllListeners("pdfParser_dataError");
+                reject(errData.parserError);
+            };
+            const onDataReady = (pdfData) => {
+                pdfParser.removeAllListeners("pdfParser_dataReady");
+                resolve(pdfParser.getRawTextContent());
+            };
+            pdfParser.on("pdfParser_dataError", onDataError);
+            pdfParser.on("pdfParser_dataReady", onDataReady);
             pdfParser.parseBuffer(buffer);
         });
     });
