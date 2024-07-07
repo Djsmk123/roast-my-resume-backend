@@ -75,10 +75,9 @@ export default async function generateRoast(request: Request, res: Response) {
         console.log(env);
 
         try {
+            let meme;
             if (roastRequest.meme === "true") {
-                const meme = await generateMeme(result.response.text(), "clxtc53mi0000ghv10g6irjqj");
-                return sendAPIResponse(res, createAPIResponse(200,
-                    "Roast generated successfully", { roast: result.response.text(), meme: meme }));
+                meme = await generateMeme(result.response.text(), "clxtc53mi0000ghv10g6irjqj");
             }
             if (env !== "development") {
                 await firebase.resumeRoastCollection.add({
@@ -97,8 +96,12 @@ export default async function generateRoast(request: Request, res: Response) {
                     'count': roastCount
                 });
 
-
             }
+            if (meme) {
+                return sendAPIResponse(res, createAPIResponse(200,
+                    "Roast generated successfully", { roast: result.response.text(), meme: meme }));
+            }
+            return sendAPIResponse(res, createAPIResponse(200, "Roast generated successfully", { roast: result.response.text() }));
         } catch (e) {
             //ignore
             console.log(e);

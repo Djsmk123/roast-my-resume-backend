@@ -72,9 +72,9 @@ function generateRoast(request, res) {
             const env = process.env.NODE_ENV;
             console.log(env);
             try {
+                let meme;
                 if (roastRequest.meme === "true") {
-                    const meme = yield (0, glif_1.generateMeme)(result.response.text(), "clxtc53mi0000ghv10g6irjqj");
-                    return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, "Roast generated successfully", { roast: result.response.text(), meme: meme }));
+                    meme = yield (0, glif_1.generateMeme)(result.response.text(), "clxtc53mi0000ghv10g6irjqj");
                 }
                 if (env !== "development") {
                     yield db_1.default.resumeRoastCollection.add({
@@ -91,6 +91,10 @@ function generateRoast(request, res) {
                         'count': roastCount
                     });
                 }
+                if (meme) {
+                    return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, "Roast generated successfully", { roast: result.response.text(), meme: meme }));
+                }
+                return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, "Roast generated successfully", { roast: result.response.text() }));
             }
             catch (e) {
                 //ignore
