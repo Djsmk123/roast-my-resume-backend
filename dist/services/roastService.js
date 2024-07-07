@@ -77,13 +77,17 @@ function generateRoast(request, res) {
                     meme = yield (0, glif_1.generateMeme)(result.response.text(), "clxtc53mi0000ghv10g6irjqj");
                 }
                 if (env !== "development") {
-                    yield db_1.default.resumeRoastCollection.add({
+                    const data = {
                         roastText: result.response.text(),
                         roastLevel: roastTone,
                         createdAt: new Date(),
                         role: roleType,
                         language: languageType,
-                    });
+                    };
+                    if (meme) {
+                        data.meme = meme.output;
+                    }
+                    yield db_1.default.resumeRoastCollection.add(data);
                     const snapshot = (yield db_1.default.resumeRoastCountCollection.get()).docs[0];
                     const roastCount = snapshot.data()['count'] + 1;
                     //update document

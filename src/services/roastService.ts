@@ -8,7 +8,7 @@ import parsePDF from "../utils/pdf-text-extractor";
 import model from "../utils/gemini";
 import firebase from "../db/db";
 import dotenv from 'dotenv';
-import { generateMeme, getFeaturedMemes } from './glif';
+import { generateMeme } from './glif';
 dotenv.config();
 export default async function generateRoast(request: Request, res: Response) {
     try {
@@ -80,14 +80,19 @@ export default async function generateRoast(request: Request, res: Response) {
                 meme = await generateMeme(result.response.text(), "clxtc53mi0000ghv10g6irjqj");
             }
             if (env !== "development") {
-                await firebase.resumeRoastCollection.add({
+                const data = {
                     roastText: result.response.text(),
                     roastLevel: roastTone,
                     createdAt: new Date(),
                     role: roleType,
                     language: languageType,
 
-                });
+
+                } as any;
+                if (meme) {
+                    data.meme = meme.output;
+                }
+                await firebase.resumeRoastCollection.add(data);
 
                 const snapshot = (await firebase.resumeRoastCountCollection.get()).docs[0];
                 const roastCount = snapshot.data()['count'] + 1;
