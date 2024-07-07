@@ -7,6 +7,8 @@ const roastRequestSchema = z.object({
     textBasedResume: z.string().optional(),
     role: z.string().optional().default('0'),
     language: z.string().optional().default('2'),
+    meme: z.string().optional().default("false"),
 
 });
+
 export default roastRequestSchema;

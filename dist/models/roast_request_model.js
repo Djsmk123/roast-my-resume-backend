@@ -10,6 +10,7 @@ const roastRequestSchema = zod_1.default.object({
     textBasedResume: zod_1.default.string().optional(),
     role: zod_1.default.string().optional().default('0'),
     language: zod_1.default.string().optional().default('2'),
+    meme: zod_1.default.string().optional().default("false"),
 });
 exports.default = roastRequestSchema;
 //# sourceMappingURL=roast_request_model.js.map

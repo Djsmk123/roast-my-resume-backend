@@ -22,11 +22,13 @@ const pdf_text_extractor_1 = __importDefault(require("../utils/pdf-text-extracto
 const gemini_1 = __importDefault(require("../utils/gemini"));
 const db_1 = __importDefault(require("../db/db"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const glif_1 = require("./glif");
 dotenv_1.default.config();
 function generateRoast(request, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const body = yield request.body;
+            console.log(body);
             const roastRequest = roast_request_model_1.default.parse(body);
             //check if roastRequest is valid
             if (!roastRequest) {
@@ -69,8 +71,12 @@ function generateRoast(request, res) {
             });
             const env = process.env.NODE_ENV;
             console.log(env);
-            if (env !== "development") {
-                try {
+            try {
+                if (roastRequest.meme === "true") {
+                    const meme = yield (0, glif_1.generateMeme)(result.response.text(), "clxtc53mi0000ghv10g6irjqj");
+                    return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, "Roast generated successfully", { roast: result.response.text(), meme: meme }));
+                }
+                if (env !== "development") {
                     yield db_1.default.resumeRoastCollection.add({
                         roastText: result.response.text(),
                         roastLevel: roastTone,
@@ -85,12 +91,12 @@ function generateRoast(request, res) {
                         'count': roastCount
                     });
                 }
-                catch (e) {
-                    //ignore
-                    console.log(e);
-                }
             }
-            return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, result.response.text()));
+            catch (e) {
+                //ignore
+                console.log(e);
+            }
+            return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, "Roast generated successfully", { roast: result.response.text() }));
         }
         catch (e) {
             return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(500, "Internal server error"));

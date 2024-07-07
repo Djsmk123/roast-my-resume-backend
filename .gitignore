@@ -23,4 +23,6 @@ logs/
 # Dependency lock files
 package-lock.json
 yarn.lock
+data_no_dup.json
+data.json
 .vercel

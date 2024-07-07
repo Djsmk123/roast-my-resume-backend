@@ -8,10 +8,12 @@ import parsePDF from "../utils/pdf-text-extractor";
 import model from "../utils/gemini";
 import firebase from "../db/db";
 import dotenv from 'dotenv';
+import { generateMeme, getFeaturedMemes } from './glif';
 dotenv.config();
 export default async function generateRoast(request: Request, res: Response) {
     try {
         const body = await request.body;
+        console.log(body);
         const roastRequest = roastRequestSchema.parse(body);
         //check if roastRequest is valid
         if (!roastRequest) {
@@ -68,11 +70,17 @@ export default async function generateRoast(request: Request, res: Response) {
         );
 
 
+
         const env = process.env.NODE_ENV;
         console.log(env);
 
-        if (env !== "development") {
-            try {
+        try {
+            if (roastRequest.meme === "true") {
+                const meme = await generateMeme(result.response.text(), "clxtc53mi0000ghv10g6irjqj");
+                return sendAPIResponse(res, createAPIResponse(200,
+                    "Roast generated successfully", { roast: result.response.text(), meme: meme }));
+            }
+            if (env !== "development") {
                 await firebase.resumeRoastCollection.add({
                     roastText: result.response.text(),
                     roastLevel: roastTone,
@@ -89,14 +97,15 @@ export default async function generateRoast(request: Request, res: Response) {
                     'count': roastCount
                 });
 
-            } catch (e) {
-                //ignore
-                console.log(e);
 
             }
+        } catch (e) {
+            //ignore
+            console.log(e);
+
         }
 
-        return sendAPIResponse(res, createAPIResponse(200, result.response.text()));
+        return sendAPIResponse(res, createAPIResponse(200, "Roast generated successfully", { roast: result.response.text() }));
     } catch (e) {
         return sendAPIResponse(res, createAPIResponse(500, "Internal server error"));
     }

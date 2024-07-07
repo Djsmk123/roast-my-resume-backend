@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 import generateRoast from './services/roastService';
 import multer from 'multer';
 import cors from 'cors';
+import { getFeaturedMemes } from './services/glif'
+import rateLimit from 'express-rate-limit';
 const upload = multer();
 dotenv.config();
 
@@ -22,6 +24,18 @@ app.use(cors(
 
     }
 ));
+// Rate limiter middleware
+const apiLimiter = rateLimit({
+    windowMs: 2 * 60 * 1000, // 2 minutes
+    max: 10,
+    message: "Too many requests from this IP, please try again after 15 minutes",
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Apply the rate limiting middleware to all requests
+app.use(apiLimiter);
+
 
 app.get('/', (_req: Request, res: Response) => {
     //health check
@@ -32,6 +46,14 @@ app.get('/', (_req: Request, res: Response) => {
 app.get(`/${routes.roastCount}`, getRoastCount)
 app.post(`/${routes.roast}`, upload.any(), generateRoast)
 
+app.get('/glif', async (req: Request, res: Response) => {
+    try {
+        const data = await getFeaturedMemes();
+        res.status(200).send(data);
+    } catch (e) {
+        res.status(500).send(e);
+    }
+});
 
 
 
