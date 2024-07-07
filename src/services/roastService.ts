@@ -80,15 +80,14 @@ export default async function generateRoast(request: Request, res: Response) {
                 meme = await generateMeme(result.response.text(), "clxtc53mi0000ghv10g6irjqj");
             }
             if (env !== "development") {
-                const data = {
+                const data: any = {
                     roastText: result.response.text(),
                     roastLevel: roastTone,
                     createdAt: new Date(),
                     role: roleType,
                     language: languageType,
-
-
-                } as any;
+                    meme: null
+                };
                 if (meme) {
                     data.meme = meme.output;
                 }

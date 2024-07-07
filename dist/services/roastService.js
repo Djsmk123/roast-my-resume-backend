@@ -83,6 +83,7 @@ function generateRoast(request, res) {
                         createdAt: new Date(),
                         role: roleType,
                         language: languageType,
+                        meme: null
                     };
                     if (meme) {
                         data.meme = meme.output;
