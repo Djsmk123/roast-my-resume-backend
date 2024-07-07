@@ -13,10 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const pdf2json_1 = __importDefault(require("pdf2json"));
-const pdfParser = new pdf2json_1.default(this, 1);
-pdfParser.setMaxListeners(20); // Increase the limit to 20 listeners
+// Increase the limit to 20 listeners
 function parsePDF(buffer) {
     return __awaiter(this, void 0, void 0, function* () {
+        const pdfParser = new pdf2json_1.default(this, 1);
+        pdfParser.setMaxListeners(1);
         return new Promise((resolve, reject) => {
             const onDataError = (errData) => {
                 pdfParser.removeAllListeners("pdfParser_dataError");

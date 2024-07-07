@@ -1,9 +1,11 @@
 import PDFParser from 'pdf2json';
 
-const pdfParser = new PDFParser(this, 1);
-pdfParser.setMaxListeners(20); // Increase the limit to 20 listeners
+
+// Increase the limit to 20 listeners
 
 async function parsePDF(buffer: Buffer): Promise<string> {
+    const pdfParser = new PDFParser(this, 1);
+    pdfParser.setMaxListeners(1);
     return new Promise((resolve, reject) => {
         const onDataError = (errData: any) => {
             pdfParser.removeAllListeners("pdfParser_dataError");
