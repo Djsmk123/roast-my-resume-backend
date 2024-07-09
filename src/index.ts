@@ -7,7 +7,7 @@ import generateRoast from './services/roastService';
 import multer from 'multer';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import getRoastData from '../src/services/roastData';
+import getRoastData from './services/roast-Data';
 const upload = multer();
 dotenv.config();
 
