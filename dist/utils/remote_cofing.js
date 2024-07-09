@@ -13,8 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db/db"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 function loadWordsFromRemoteConfig() {
     return __awaiter(this, void 0, void 0, function* () {
+        const env = process.env.NODE_ENV;
+        if (env === 'development') {
+            return [];
+        }
         let words = [];
         const remoteConfig = yield db_1.default.remoteConfig.getTemplate();
         var templateStr = JSON.stringify(remoteConfig);

@@ -6,8 +6,8 @@ import dotenv from 'dotenv';
 import generateRoast from './services/roastService';
 import multer from 'multer';
 import cors from 'cors';
-import { getFeaturedMemes } from './services/glif'
 import rateLimit from 'express-rate-limit';
+import getRoastData from '../src/services/roastData';
 const upload = multer();
 dotenv.config();
 
@@ -46,15 +46,7 @@ app.get('/', (_req: Request, res: Response) => {
 app.get(`/${routes.roastCount}`, getRoastCount)
 app.post(`/${routes.roast}`, upload.any(), generateRoast)
 
-app.get('/glif', async (req: Request, res: Response) => {
-    try {
-        const data = await getFeaturedMemes();
-        res.status(200).send(data);
-    } catch (e) {
-        res.status(500).send(e);
-    }
-});
-
+app.get('/roast/:id', getRoastData);
 
 
 
