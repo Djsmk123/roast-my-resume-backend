@@ -9,7 +9,9 @@ const serviceAccount = JSON.parse(
 );
 let regularObj = {};
 const env = process.env.NODE_ENV;
-const FIRESTORE_EMULATOR_HOST = process.env.FIRESTORE_EMULATOR_HOST;
+if (env === 'development') {
+    const FIRESTORE_EMULATOR_HOST = process.env.FIRESTORE_EMULATOR_HOST;
+}
 
 Object.assign(regularObj, serviceAccount);
 

@@ -48,7 +48,7 @@ function generateRoast(request, res) {
             const roleType = Object.values(constant_1.constants.Roles)[role];
             const languageType = Object.values(constant_1.constants.Languages)[language];
             const words = yield (0, remote_cofing_1.default)();
-            const prompt = (0, prompt_builder_1.default)(roleType, roastTone, words, languageType);
+            const prompt = (0, prompt_builder_1.default)(roastTone, roleType, words, languageType);
             let resumeText = roastRequest.textBasedResume;
             if (resumeFile) {
                 //parse pdf

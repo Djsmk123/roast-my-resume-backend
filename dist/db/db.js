@@ -8,7 +8,9 @@ const dotenv_1 = require("dotenv");
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
 let regularObj = {};
 const env = process.env.NODE_ENV;
-const FIRESTORE_EMULATOR_HOST = process.env.FIRESTORE_EMULATOR_HOST;
+if (env === 'development') {
+    const FIRESTORE_EMULATOR_HOST = process.env.FIRESTORE_EMULATOR_HOST;
+}
 Object.assign(regularObj, serviceAccount);
 const firebaseAdminConfig = {
     credential: (0, app_1.cert)(regularObj)

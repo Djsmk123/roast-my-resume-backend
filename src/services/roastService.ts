@@ -29,16 +29,13 @@ export default async function generateRoast(request: Request, res: Response) {
         const roastLevel = parseInt(roastRequest.roastLevel); //index of roast level
         const role = parseInt(roastRequest.role);
         const language = parseInt(roastRequest.language);
-
-
-
         const roastTone = Object.values(constants.Tones)[roastLevel];
         const roleType = Object.values(constants.Roles)[role];
         const languageType = Object.values(constants.Languages)[language];
         const words = await loadWordsFromRemoteConfig();
         const prompt = getPromptHelper(
-            roleType,
             roastTone,
+            roleType,
             words,
             languageType,
         );
