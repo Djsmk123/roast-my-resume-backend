@@ -26,6 +26,12 @@ bot.onText(/\/start/, async (msg) => {
         Welcome to Roast My Resume!
         /help - Get a list of commands
         /start - Start the bot
+
+
+        Now, use the /roast command to get your resume roasted!
+        Disclaimer: This bot is for entertainment purposes only. The roasts generated are not meant to be taken seriously.
+    
+        Note: Please do not store your resume text on databases or any other storage. We do keep only generated roast and meme for sharing and bot improvement purposes.
     `;
     await bot.sendMessage(chatId, startMessage);
 });
@@ -66,7 +72,8 @@ bot.onText(/\/help/, async (msg) => {
 
     Example with meme:
     / roast 3 3 0 meme
-    
+    Disclaimer: This bot is for entertainment purposes only. The roasts generated are not meant to be taken seriously.
+
 
         `);
     await bot.sendMessage(chatId, text);
@@ -124,6 +131,7 @@ bot.on("document", async (msg) => {
     const tone = Object.values(constants.Tones)[roastLevel];
     const roleType = Object.values(constants.Roles)[role];
     const languageType = Object.values(constants.Languages)[language];
+    await bot.sendMessage(chatId, "Processing your request could take a few seconds... Please wait");
 
     try {
         // Parse PDF

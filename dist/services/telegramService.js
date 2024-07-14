@@ -34,6 +34,12 @@ bot.onText(/\/start/, (msg) => __awaiter(void 0, void 0, void 0, function* () {
         Welcome to Roast My Resume!
         /help - Get a list of commands
         /start - Start the bot
+
+
+        Now, use the /roast command to get your resume roasted!
+        Disclaimer: This bot is for entertainment purposes only. The roasts generated are not meant to be taken seriously.
+    
+        Note: Please do not store your resume text on databases or any other storage. We do keep only generated roast and meme for sharing and bot improvement purposes.
     `;
     yield bot.sendMessage(chatId, startMessage);
 }));
@@ -73,7 +79,8 @@ bot.onText(/\/help/, (msg) => __awaiter(void 0, void 0, void 0, function* () {
 
     Example with meme:
     / roast 3 3 0 meme
-    
+    Disclaimer: This bot is for entertainment purposes only. The roasts generated are not meant to be taken seriously.
+
 
         `);
     yield bot.sendMessage(chatId, text);
@@ -121,6 +128,7 @@ bot.on("document", (msg) => __awaiter(void 0, void 0, void 0, function* () {
     const tone = Object.values(constant_1.constants.Tones)[roastLevel];
     const roleType = Object.values(constant_1.constants.Roles)[role];
     const languageType = Object.values(constant_1.constants.Languages)[language];
+    yield bot.sendMessage(chatId, "Processing your request could take a few seconds... Please wait");
     try {
         // Parse PDF
         const resumeText = yield (0, pdf_text_extractor_1.default)({ buffer: null, url: filePath });
