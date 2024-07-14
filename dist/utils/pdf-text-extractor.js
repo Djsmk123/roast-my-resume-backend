@@ -13,8 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const pdf2json_1 = __importDefault(require("pdf2json"));
-// Increase the limit to 20 listeners
-function parsePDF(buffer) {
+const fs_1 = __importDefault(require("fs"));
+const https_1 = __importDefault(require("https"));
+function parsePDF(pdfParse) {
     return __awaiter(this, void 0, void 0, function* () {
         const pdfParser = new pdf2json_1.default(this, 1);
         pdfParser.setMaxListeners(1);
@@ -29,7 +30,39 @@ function parsePDF(buffer) {
             };
             pdfParser.on("pdfParser_dataError", onDataError);
             pdfParser.on("pdfParser_dataReady", onDataReady);
-            pdfParser.parseBuffer(buffer);
+            if (pdfParse.url) {
+                const url = pdfParse.url;
+                const tempFilePath = "temp.pdf";
+                // Download the PDF file
+                const fileStream = fs_1.default.createWriteStream(tempFilePath);
+                https_1.default.get(url, (response) => {
+                    response.pipe(fileStream);
+                    response.on("end", () => {
+                        fileStream.close();
+                        // Read the file into a buffer
+                        fs_1.default.readFile(tempFilePath, (err, data) => {
+                            if (err) {
+                                reject(err);
+                            }
+                            else {
+                                const buffer = Buffer.from(data);
+                                pdfParser.parseBuffer(buffer);
+                                // Delete the temporary file after parsing
+                                fs_1.default.unlink(tempFilePath, (err) => {
+                                    if (err)
+                                        console.error(`Failed to delete temp file: ${err.message}`);
+                                });
+                            }
+                        });
+                    });
+                }).on('error', (err) => {
+                    fs_1.default.unlink(tempFilePath, () => { }); // Delete the file if an error occurs
+                    reject(err);
+                });
+            }
+            else if (pdfParse.buffer) {
+                pdfParser.parseBuffer(pdfParse.buffer);
+            }
         });
     });
 }

@@ -8,6 +8,7 @@ import multer from 'multer';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import getRoastData from './services/roast-Data';
+import bot from './services/telegramService';
 const upload = multer();
 dotenv.config();
 
@@ -48,7 +49,7 @@ app.post(`/${routes.roast}`, upload.any(), generateRoast)
 
 app.get('/roast/:id', getRoastData);
 
-
+bot.on("polling_error", console.log);
 
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`)

@@ -13,6 +13,7 @@ const multer_1 = __importDefault(require("multer"));
 const cors_1 = __importDefault(require("cors"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const roast_Data_1 = __importDefault(require("./services/roast-Data"));
+const telegramService_1 = __importDefault(require("./services/telegramService"));
 const upload = (0, multer_1.default)();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -41,6 +42,7 @@ app.get('/', (_req, res) => {
 app.get(`/${routes_1.routes.roastCount}`, roastCount_1.getRoastCount);
 app.post(`/${routes_1.routes.roast}`, upload.any(), roastService_1.default);
 app.get('/roast/:id', roast_Data_1.default);
+telegramService_1.default.on("polling_error", console.log);
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`);
 });
