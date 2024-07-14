@@ -24,7 +24,8 @@ bot.onText(/\/start/, async (msg) => {
     const chatId = msg.chat.id;
     const startMessage = `
         Welcome to Roast My Resume!
-        ...
+        /help - Get a list of commands
+        /start - Start the bot
     `;
     await bot.sendMessage(chatId, startMessage);
 });
@@ -32,10 +33,42 @@ bot.onText(/\/start/, async (msg) => {
 // Handle the /help command
 bot.onText(/\/help/, async (msg) => {
     const chatId = msg.chat.id;
-    const text = `
-        Welcome to the Roast My Resume bot! Here are the commands you can use:
-        ...
-    `;
+    const text = (`
+        Welcome to the Roast My Resume bot! Here are the commands you can use: \n\n
+        1. /roast <RoastLevel> <Role> <Language> [meme]
+   - RoastLevel:
+     - 0 = Soft-hearted
+     - 1 = Hard-hearted
+     - 2 = Light
+     - 3 = Dark
+     - 4 = Vulgar
+   - Role:
+     - 0 = Memer
+     - 1 = Job Interviewer
+     - 2 = Standup Comedian
+     - 3 = HR
+     - 4 = Friend
+     - 5 = Family Member
+     - 6 = Ashneer Grover
+     - 7 = Teacher
+     - 8 = Enemy
+     - 9 = Girlfriend
+     - 10 = Boyfriend
+   - Language:
+     - 0 = English
+     - 1 = Hindi
+     - 2 = Both Hindi and English
+   - Meme (optional): To include a meme in the roast, add "meme" at the end of the command.
+   \n\n\
+
+    Example without meme:
+    / roast 3 3 0
+
+    Example with meme:
+    / roast 3 3 0 meme
+    
+
+        `);
     await bot.sendMessage(chatId, text);
 });
 
@@ -113,7 +146,7 @@ bot.on("document", async (msg) => {
             return;
         }
 
-        const message = `We have a new roast from Roast My Resume!. Check it out below:\n\n${response.roast}\n\nCheck it out below:\n\nhttps://roast-my-resume-henna.vercel.app/roast?id=${response.id}\n\n`;
+        const message = `We have a new roast from Roast My Resume!.Check it out below: \n\n${response.roast} \n\nCheck it out below: \n\nhttps://roast-my-resume-henna.vercel.app/roast?id=${response.id}\n\n`;
         await bot.sendMessage(chatId, message);
 
         if (response.meme) {

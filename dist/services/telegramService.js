@@ -32,17 +32,50 @@ bot.onText(/\/start/, (msg) => __awaiter(void 0, void 0, void 0, function* () {
     const chatId = msg.chat.id;
     const startMessage = `
         Welcome to Roast My Resume!
-        ...
+        /help - Get a list of commands
+        /start - Start the bot
     `;
     yield bot.sendMessage(chatId, startMessage);
 }));
 // Handle the /help command
 bot.onText(/\/help/, (msg) => __awaiter(void 0, void 0, void 0, function* () {
     const chatId = msg.chat.id;
-    const text = `
-        Welcome to the Roast My Resume bot! Here are the commands you can use:
-        ...
-    `;
+    const text = (`
+        Welcome to the Roast My Resume bot! Here are the commands you can use: \n\n
+        1. /roast <RoastLevel> <Role> <Language> [meme]
+   - RoastLevel:
+     - 0 = Soft-hearted
+     - 1 = Hard-hearted
+     - 2 = Light
+     - 3 = Dark
+     - 4 = Vulgar
+   - Role:
+     - 0 = Memer
+     - 1 = Job Interviewer
+     - 2 = Standup Comedian
+     - 3 = HR
+     - 4 = Friend
+     - 5 = Family Member
+     - 6 = Ashneer Grover
+     - 7 = Teacher
+     - 8 = Enemy
+     - 9 = Girlfriend
+     - 10 = Boyfriend
+   - Language:
+     - 0 = English
+     - 1 = Hindi
+     - 2 = Both Hindi and English
+   - Meme (optional): To include a meme in the roast, add "meme" at the end of the command.
+   \n\n\
+
+    Example without meme:
+    / roast 3 3 0
+
+    Example with meme:
+    / roast 3 3 0 meme
+    
+
+        `);
     yield bot.sendMessage(chatId, text);
 }));
 // Handle the /roast command
@@ -107,7 +140,7 @@ bot.on("document", (msg) => __awaiter(void 0, void 0, void 0, function* () {
             yield bot.sendMessage(chatId, "Error generating roast. Please try again.");
             return;
         }
-        const message = `We have a new roast from Roast My Resume!. Check it out below:\n\n${response.roast}\n\nCheck it out below:\n\nhttps://roast-my-resume-henna.vercel.app/roast?id=${response.id}\n\n`;
+        const message = `We have a new roast from Roast My Resume!.Check it out below: \n\n${response.roast} \n\nCheck it out below: \n\nhttps://roast-my-resume-henna.vercel.app/roast?id=${response.id}\n\n`;
         yield bot.sendMessage(chatId, message);
         if (response.meme) {
             yield bot.sendMessage(chatId, `We also have a meme for you!\n${response.meme.output}`);
