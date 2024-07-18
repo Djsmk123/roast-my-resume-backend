@@ -4,7 +4,7 @@ import { createAPIResponse, sendAPIResponse } from '../models/network_response_m
 import { constants } from "../utils/constant";
 import parsePDF from "../utils/pdf-text-extractor";
 import dotenv from 'dotenv';
-import roastHelper from './roastHelper';
+import helper from './roastHelper';
 dotenv.config();
 export default async function generateRoast(request: Request, res: Response) {
     try {
@@ -38,12 +38,13 @@ export default async function generateRoast(request: Request, res: Response) {
                 return sendAPIResponse(res, createAPIResponse(400, "Error parsing pdf"));
             }
         }
-        const resonse = await roastHelper({
+        const resonse = await helper.roastHelper({
             roastTone,
             roleType,
             languageType,
-            resumeText,
-            hasMeme: roastRequest.meme == "true"
+            text: resumeText,
+            hasMeme: roastRequest.meme == "true",
+            entity: "Resume",
         });
         if (!resonse) {
             return sendAPIResponse(res, createAPIResponse(500, "Internal server error"));

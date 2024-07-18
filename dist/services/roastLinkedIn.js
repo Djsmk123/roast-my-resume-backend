@@ -12,55 +12,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = generateRoast;
-const roast_request_model_1 = __importDefault(require("../models/roast_request_model"));
-const network_response_model_1 = require("../models/network_response_model");
-const constant_1 = require("../utils/constant");
-const pdf_text_extractor_1 = __importDefault(require("../utils/pdf-text-extractor"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const network_response_model_1 = require("../models/network_response_model");
+const linkedIn_request_model_1 = __importDefault(require("../models/linkedIn_request_model"));
+const constant_1 = require("../utils/constant");
 const roastHelper_1 = __importDefault(require("./roastHelper"));
+const roastHelper_2 = __importDefault(require("./roastHelper"));
 dotenv_1.default.config();
-function generateRoast(request, res) {
+function roastLinkedIn(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const body = yield request.body;
+            const body = yield req.body;
             console.log(body);
-            const roastRequest = roast_request_model_1.default.parse(body);
-            //check if roastRequest is valid
-            if (!roastRequest) {
+            //validate request
+            const linkedInRequest = linkedIn_request_model_1.default.parse(body);
+            //check if the request is valid
+            if (!linkedInRequest) {
                 return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(400, "Invalid request"));
             }
-            let resumeFile;
-            if (Array.isArray(request.files) && request.files.length > 0) {
-                resumeFile = request.files[0].buffer;
-            }
-            if (!roastRequest.textBasedResume && !resumeFile) {
-                return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(400, "No resume provided"));
-            }
-            const roastLevel = parseInt(roastRequest.roastLevel); //index of roast level
-            const role = parseInt(roastRequest.role);
-            const language = parseInt(roastRequest.language);
+            const roastLevel = parseInt(linkedInRequest.roastLevel); //index of roast level
+            const role = parseInt(linkedInRequest.role);
+            const language = parseInt(linkedInRequest.language);
             const roastTone = Object.values(constant_1.constants.Tones)[roastLevel];
             const roleType = Object.values(constant_1.constants.Roles)[role];
             const languageType = Object.values(constant_1.constants.Languages)[language];
-            let resumeText = roastRequest.textBasedResume;
-            if (resumeFile) {
-                //parse pdf
-                const pdfText = yield (0, pdf_text_extractor_1.default)({ buffer: resumeFile, url: null });
-                if (pdfText) {
-                    resumeText = pdfText;
-                }
-                else {
-                    return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(400, "Error parsing pdf"));
-                }
+            const linkedInProfile = linkedInRequest.linkedProfile;
+            const linkedInProfileData = yield roastHelper_2.default.getLinkedInProfile(linkedInProfile);
+            if (!linkedInProfileData) {
+                return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(400, "Invalid LinkedIn profile"));
             }
             const resonse = yield roastHelper_1.default.roastHelper({
                 roastTone,
                 roleType,
                 languageType,
-                text: resumeText,
-                hasMeme: roastRequest.meme == "true",
-                entity: "Resume",
+                text: "Profile: " + JSON.stringify(linkedInProfileData),
+                hasMeme: linkedInRequest.meme == "true",
+                entity: "My Linked Profile",
             });
             if (!resonse) {
                 return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(500, "Internal server error"));
@@ -73,4 +60,5 @@ function generateRoast(request, res) {
         }
     });
 }
-//# sourceMappingURL=roastService.js.map
+exports.default = roastLinkedIn;
+//# sourceMappingURL=roastLinkedIn.js.map

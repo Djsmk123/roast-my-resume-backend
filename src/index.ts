@@ -9,6 +9,7 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import getRoastData from './services/roast-Data';
 import bot from './services/telegramService';
+import roastLinkedIn from './services/roastLinkedIn';
 const upload = multer();
 dotenv.config();
 
@@ -48,6 +49,8 @@ app.get(`/${routes.roastCount}`, getRoastCount)
 app.post(`/${routes.roast}`, upload.any(), generateRoast)
 
 app.get('/roast/:id', getRoastData);
+
+app.post('/roastLinkedIn', upload.any(), roastLinkedIn);
 
 bot.on("polling_error", console.log);
 

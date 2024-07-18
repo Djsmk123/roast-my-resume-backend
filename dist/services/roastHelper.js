@@ -21,20 +21,18 @@ const glif_1 = require("./glif");
 function roastHelper(roastRequest) {
     return __awaiter(this, void 0, void 0, function* () {
         const words = yield (0, remote_cofing_1.default)();
-        const { roastTone, roleType, languageType, resumeText, hasMeme } = roastRequest;
-        const prompt = (0, prompt_builder_1.default)(roastTone, roleType, words, languageType);
+        const { roastTone, roleType, languageType, entity, hasMeme } = roastRequest;
+        const prompt = (0, prompt_builder_1.default)(roastTone, roleType, words, languageType, entity);
         //generate roast
         const content = [
             { role: "model", parts: [{ text: prompt }] },
-            { role: "user", parts: [{ text: resumeText }] },
+            { role: "user", parts: [{ text: roastRequest.text }] },
         ];
         const result = yield gemini_1.default.generateContent({
             contents: content,
             safetySettings: constant_1.constants.safetySettings,
         });
         const roastText = result.response.text();
-        const env = process.env.NODE_ENV;
-        console.log(env);
         let docId = "";
         let meme = null;
         if (hasMeme) {
@@ -46,7 +44,8 @@ function roastHelper(roastRequest) {
             createdAt: new Date(),
             role: roleType,
             language: languageType,
-            meme: meme
+            meme: meme,
+            entity: entity,
         };
         const doc = yield db_1.default.resumeRoastCollectionV2.add(data);
         console.log("Document written with ID: ", doc.id);
@@ -71,5 +70,45 @@ function roastHelper(roastRequest) {
         };
     });
 }
-exports.default = roastHelper;
+function getLinkedInProfile(profileUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const baseURl = "https://linkedin-data-api.p.rapidapi.com/get-profile-data-by-url?url=" + profileUrl;
+        const fetchResponse = yield fetch(baseURl, {
+            method: 'GET',
+            headers: {
+                'x-rapidapi-key': process.env.RAPIDAPI_KEY,
+                'x-rapidapi-host': 'linkedin-data-api.p.rapidapi.com'
+            }
+        });
+        console.log(fetchResponse);
+        if (fetchResponse.status !== 200) {
+            return null;
+        }
+        const responseBody = yield fetchResponse.text();
+        var response = JSON.parse(responseBody);
+        return response;
+        // const baseUrl = "https://api.scrapingdog.com/linkedin";
+        // const apiKey = process.env.SCRAPINGDOG_API_KEY;
+        // const type = "profile";
+        // const regex = /linkedin\.com\/in\/([a-zA-Z0-9-]+)/;
+        // const match = profileUrl.match(regex);
+        // const linkId = match ? match[1] : null;
+        // const url = `${baseUrl}/?api_key=${apiKey}&type=${type}&linkId=${linkId}`;
+        // const fetchResponse = await fetch(url, {
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        // });
+        // console.log(fetchResponse);
+        // if (fetchResponse.status !== 200) {
+        //     return null;
+        // }
+        // const responseBody = await fetchResponse.text();
+        // var response = JSON.parse(responseBody);
+        // console.log(response);
+        // return response[0];
+    });
+}
+exports.default = { roastHelper, getLinkedInProfile };
 //# sourceMappingURL=roastHelper.js.map
