@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 interface RoastResponse {
     roast: string;
     id: string;
+    entity: string;
     meme: {
         output: string;
         outputFull: {
@@ -31,6 +32,7 @@ async function getRoastData(
                 roast: roast.roastText,
                 id: roastData.id,
                 meme: roast.meme,
+                entity: roast.entity
             };
             return sendAPIResponse(res, createAPIResponse(200, "Roast found successfully", roastResponse));
 

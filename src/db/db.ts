@@ -31,6 +31,7 @@ const firestoreInstance = getFirestore(app);
 const resumeRoastCollection = firestoreInstance.collection("resumeRoast");
 const resumeRoastCountCollection = firestoreInstance.collection("resumeRoastCount");
 const resumeRoastCollectionV2 = firestoreInstance.collection("resumeRoastNew");
+const linkedProfilesCollection = firestoreInstance.collection("linkedProfiles");
 //remote config
 const remoteConfig = env === 'development' ? null : getRemoteConfig(app);
 
@@ -39,4 +40,5 @@ export default {
     remoteConfig,
     resumeRoastCountCollection,
     resumeRoastCollectionV2,
+    linkedProfilesCollection
 };

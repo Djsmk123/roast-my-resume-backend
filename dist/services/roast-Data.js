@@ -26,6 +26,7 @@ function getRoastData(request, res) {
                     roast: roast.roastText,
                     id: roastData.id,
                     meme: roast.meme,
+                    entity: roast.entity
                 };
                 return (0, network_response_model_1.sendAPIResponse)(res, (0, network_response_model_1.createAPIResponse)(200, "Roast found successfully", roastResponse));
             }

@@ -88,6 +88,18 @@ async function roastHelper(
 async function getLinkedInProfile(
     profileUrl: string
 ) {
+    //check in firebase if the profile is already roasted and not expired
+    const snapshot = await firebase.linkedProfilesCollection.where('profileUrl', '==', profileUrl).where('expires', '>', new Date()).get();
+    if (!snapshot.empty) {
+        //parse the data
+        const data = snapshot.docs[0].data();
+        //remove profileUrl and expires
+        delete data['profileUrl'];
+        delete data['expires'];
+        console.log(data);
+        return data;
+    }
+
     const baseURl = "https://linkedin-data-api.p.rapidapi.com/get-profile-data-by-url?url=" + profileUrl;
     const fetchResponse = await fetch(baseURl, {
         method: 'GET',
@@ -102,29 +114,15 @@ async function getLinkedInProfile(
     }
     const responseBody = await fetchResponse.text();
     var response = JSON.parse(responseBody);
+    //store the data in firebase
+    response['profileUrl'] = profileUrl;
+    //30 days expiry
+    response['expires'] = new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000);
+    await firebase.linkedProfilesCollection.add(response);
+
     return response;
 
-    // const baseUrl = "https://api.scrapingdog.com/linkedin";
-    // const apiKey = process.env.SCRAPINGDOG_API_KEY;
-    // const type = "profile";
-    // const regex = /linkedin\.com\/in\/([a-zA-Z0-9-]+)/;
-    // const match = profileUrl.match(regex);
-    // const linkId = match ? match[1] : null;
-    // const url = `${baseUrl}/?api_key=${apiKey}&type=${type}&linkId=${linkId}`;
-    // const fetchResponse = await fetch(url, {
-    //     method: 'GET',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    // });
-    // console.log(fetchResponse);
-    // if (fetchResponse.status !== 200) {
-    //     return null;
-    // }
-    // const responseBody = await fetchResponse.text();
-    // var response = JSON.parse(responseBody);
-    // console.log(response);
-    // return response[0];
+
 }
 
 
